@@ -20,7 +20,7 @@
 				<div class="details-container">
 					<h1>{item.name}</h1>
 					<p class="description">{item.description}</p>
-					<p class="price">{item.price} THB</p>
+					<p class="price">{item.price} ฿</p>
 					<p class="stock">Stock: {item.stock} remaining</p>
 					<div class="categories">
 						{#each item.category as category}

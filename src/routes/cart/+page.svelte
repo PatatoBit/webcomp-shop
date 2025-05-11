@@ -77,24 +77,22 @@
 				{#each $cartItems as item}
 					<div class="receipt-row">
 						<p>{item.name}</p>
-						<p>{item.quantity} x {item.price}THB</p>
-						<strong>{item.quantity * item.price}THB</strong>
+						<p>{item.quantity} x {item.price}฿</p>
+						<strong>{item.quantity * item.price}฿</strong>
 					</div>
 				{/each}
 			</div>
 			<div class="receipt-row">
 				<p>Delivery fee</p>
 				<p></p>
-				<strong>35THB</strong>
+				<strong>35฿</strong>
 			</div>
 
 			<div class="receipt-row">
 				<p>Total</p>
 				<p></p>
 				<strong>
-					{($cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0) + 35).toFixed(
-						2
-					)}THB
+					{($cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0) + 35).toFixed(2)}฿
 				</strong>
 			</div>
 
@@ -141,7 +139,7 @@
 </div>
 
 <div class="wrapper hero">
-	<h2>Order summary</h2>
+	<h2>Recent orders</h2>
 </div>
 
 <div class="wrapper">
@@ -153,7 +151,7 @@
 				{#each order.items as item}
 					<div class="flex flex-row justify-between">
 						<p>{item.name}</p>
-						<p>Total: {item.quantity * item.price}</p>
+						<p>{item.quantity * item.price}฿</p>
 					</div>
 				{/each}
 			</div>

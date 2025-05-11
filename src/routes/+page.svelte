@@ -81,19 +81,30 @@
 		padding-left: 5rem;
 		flex-wrap: wrap;
 		background-color: rgb(221, 184, 18);
-
 		border-radius: 1rem;
 		overflow: hidden;
+
+		@media (max-width: 768px) {
+			padding: 1rem;
+			padding-left: 1rem;
+			flex-direction: column;
+			align-items: center;
+			text-align: center;
+		}
 	}
 
 	.cheffy {
 		position: absolute;
 		width: 120px;
 		height: 120px;
-
 		bottom: 0;
 		left: 0;
 		z-index: 1;
+
+		@media (max-width: 768px) {
+			position: relative;
+			margin-top: 1rem;
+		}
 	}
 
 	.grid {
@@ -101,5 +112,17 @@
 		display: grid;
 		grid-template-columns: repeat(4, minmax(250px, 250px));
 		gap: 1.5rem;
+
+		@media (max-width: 1200px) {
+			grid-template-columns: repeat(3, minmax(200px, 1fr));
+		}
+
+		@media (max-width: 900px) {
+			grid-template-columns: repeat(2, minmax(150px, 1fr));
+		}
+
+		@media (max-width: 600px) {
+			grid-template-columns: 1fr;
+		}
 	}
 </style>

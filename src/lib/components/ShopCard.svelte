@@ -26,7 +26,7 @@
 	<div class="card-content">
 		<h3>{item.name}</h3>
 		<div class="price-stock">
-			<p class="price">{item.price}THB</p>
+			<p class="price">{item.price}฿</p>
 			<p class="stock">
 				{item.stock - ($cartItems.find((cartItem) => cartItem.id === item.id)?.quantity || 0)} remaining
 			</p>

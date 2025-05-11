@@ -1,3 +1,5 @@
+import type { CartItem } from './localStores';
+
 export interface ShopItem {
 	id: string;
 	name: string;
@@ -6,4 +8,10 @@ export interface ShopItem {
 	price: number;
 	category: string[];
 	stock: number;
+}
+
+export interface Order {
+	createdAt: string;
+	items: CartItem[];
+	status: 'pending' | 'shipped' | 'delivered' | 'cancelled';
 }

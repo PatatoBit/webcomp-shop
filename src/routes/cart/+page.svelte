@@ -1,5 +1,11 @@
 <script lang="ts">
+	import { db } from '$lib/firebase';
 	import { cartItems } from '$lib/localStores';
+	import type { Order } from '$lib/utils';
+	import { addDoc, collection, type doc } from 'firebase/firestore';
+	import { collectionStore } from 'sveltefire';
+
+	const currentOrders = collectionStore<Order>(db, 'orders');
 
 	function removeItemFromCart(id: string) {
 		cartItems.update((items) => {
@@ -16,6 +22,23 @@
 			return items;
 		});
 	}
+
+	async function checkoutCart() {
+		const colRef = collection(db, 'orders');
+
+		if ($cartItems.length === 0) {
+			alert('Your cart is empty');
+			return;
+		}
+
+		const docRef = await addDoc(colRef, {
+			createdAt: new Date(),
+			status: 'pending',
+			items: $cartItems
+		});
+
+		cartItems.set([]);
+	}
 </script>
 
 <header class="wrapper hero">
@@ -24,7 +47,32 @@
 		<p>You currently have {$cartItems.length} items in the cart</p>
 	</div>
 
-	<button class="btn btn-primary"> Checkout </button>
+	<button
+		class="btn btn-primary"
+		onclick={() => (document.getElementById('payment_modal') as HTMLDialogElement)?.showModal()}
+		>Checkout</button
+	>
+	<dialog id="payment_modal" class="modal">
+		<div class="modal-box">
+			<h3 class="text-lg font-bold">Payment</h3>
+			<p class="py-4">
+				Your total: {$cartItems
+					.map((item) => {
+						return item.quantity * item.price;
+					})
+					.reduce((a, b) => a + b, 0)}
+			</p>
+			<div class="modal-action">
+				<form method="dialog">
+					<!-- if there is a button in form, it will close the modal -->
+					<button class="btn btn-primary" onclick={async () => await checkoutCart()}>
+						Pay now
+					</button>
+					<button class="btn">Close</button>
+				</form>
+			</div>
+		</div>
+	</dialog>
 </header>
 
 <div class="wrapper">
@@ -46,6 +94,25 @@
 				</div>
 				<button class="remove-btn btn" onclick={() => removeItemFromCart(item.id)}>Remove</button>
 			</div>
+		{/each}
+	</div>
+</div>
+
+<div class="wrapper hero">
+	<h2>Order summary</h2>
+</div>
+
+<div class="wrapper">
+	<div class="list">
+		{#each $currentOrders as order}
+			{#each order.items as item}
+				<div class="list-item">
+					<h3>{item.name}</h3>
+
+					<p>Total: {item.quantity * item.price}</p>
+				</div>
+				<p>Status: {order.status}</p>
+			{/each}
 		{/each}
 	</div>
 </div>

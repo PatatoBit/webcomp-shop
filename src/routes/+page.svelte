@@ -64,8 +64,7 @@
 					<img class="product-image" src={item.image} alt={item.name} />
 				</a>
 
-				<h2>{item.name}</h2>
-				<p>{item.description}</p>
+				<h3>{item.name}</h3>
 				<p>{item.price}THB</p>
 				<p>{item.stock} remaining</p>
 
@@ -98,8 +97,7 @@
 							<img class="product-image" src={item.image} alt={item.name} />
 						</a>
 
-						<h2>{item.name}</h2>
-						<p>{item.description}</p>
+						<h3>{item.name}</h3>
 						<p>{item.price}THB</p>
 						<p>{item.stock} remaining</p>
 
@@ -131,7 +129,7 @@
 		padding: 2rem;
 		flex-wrap: wrap;
 
-		background-color: rgb(44, 96, 217);
+		background-color: rgb(221, 184, 18);
 	}
 
 	.grid {

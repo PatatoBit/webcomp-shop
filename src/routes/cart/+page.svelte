@@ -31,6 +31,16 @@
 			return;
 		}
 
+		if ($cartItems.some((item) => item.stock < item.quantity)) {
+			alert('Some items are out of stock');
+			return;
+		}
+
+		if ($cartItems.some((item) => item.quantity <= 0)) {
+			alert('Some items have invalid quantity');
+			return;
+		}
+
 		const docRef = await addDoc(colRef, {
 			createdAt: new Date(),
 			status: 'paid',
@@ -62,17 +72,34 @@
 	>
 	<dialog id="payment_modal" class="modal">
 		<div class="modal-box">
-			<h3 class="text-lg font-bold">Payment</h3>
-			<p class="py-4">
-				Your total: {$cartItems
-					.map((item) => {
-						return item.quantity * item.price;
-					})
-					.reduce((a, b) => a + b, 0)}
-			</p>
+			<h3 class="text-lg font-bold">Confirm order</h3>
+			<div class="py-4 receipt">
+				{#each $cartItems as item}
+					<div class="receipt-row">
+						<p>{item.name}</p>
+						<p>{item.quantity} x {item.price}THB</p>
+						<p>{item.quantity * item.price}THB</p>
+					</div>
+				{/each}
+			</div>
+			<div class="receipt-row">
+				<p>Delivery fee</p>
+				<p></p>
+				<p>35THB</p>
+			</div>
+
+			<div class="receipt-row">
+				<p>Total</p>
+				<p></p>
+				<p>
+					{($cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0) + 35).toFixed(
+						2
+					)}THB
+				</p>
+			</div>
+
 			<div class="modal-action">
 				<form method="dialog">
-					<!-- if there is a button in form, it will close the modal -->
 					<button class="btn btn-primary" onclick={async () => await checkoutCart()}>
 						Pay now
 					</button>
@@ -87,20 +114,27 @@
 	<div class="list">
 		{#each $cartItems as item}
 			<div class="list-item">
-				<h3>{item.name}</h3>
-
-				<p>Total: {item.quantity * item.price}</p>
-
-				<div class="quantity">
-					<button class="btn" onclick={() => changeQuantity(item.id, -1)}>-</button>
-					<p>{item.quantity}</p>
-					<button
-						class="btn"
-						class:btn-disabled={item.stock <= item.quantity}
-						onclick={() => changeQuantity(item.id, 1)}>+</button
-					>
+				<div class="first">
+					<h3>{item.name}</h3>
 				</div>
-				<button class="remove-btn btn" onclick={() => removeItemFromCart(item.id)}>Remove</button>
+
+				<div class="second">
+					<div class="quantity">
+						<button
+							class="btn"
+							class:btn-disabled={item.quantity <= 0}
+							onclick={() => changeQuantity(item.id, -1)}>-</button
+						>
+						<p>{item.quantity}</p>
+						<button
+							class="btn"
+							class:btn-disabled={item.stock <= item.quantity}
+							onclick={() => changeQuantity(item.id, 1)}>+</button
+						>
+					</div>
+					<p>Total: {item.quantity * item.price}</p>
+					<button class="remove-btn btn" onclick={() => removeItemFromCart(item.id)}>Remove</button>
+				</div>
 			</div>
 		{/each}
 	</div>
@@ -111,18 +145,20 @@
 </div>
 
 <div class="wrapper">
-	<div class="list">
-		{#each $currentOrders as order}
-			{#each order.items as item}
-				<div class="list-item">
-					<h3>{item.name}</h3>
+	{#each $currentOrders as order, index}
+		<div tabindex="0" class="collapse collapse-arrow bg-base-100 border-base-300 border">
+			<div class="collapse-title font-semibold">Order {index + 1}: {order.status}</div>
 
-					<p>Total: {item.quantity * item.price}</p>
-				</div>
-				<p>Status: {order.status}</p>
-			{/each}
-		{/each}
-	</div>
+			<div class="collapse-content text-sm flex flex-col">
+				{#each order.items as item}
+					<div class="flex flex-row justify-between">
+						<p>{item.name}</p>
+						<p>Total: {item.quantity * item.price}</p>
+					</div>
+				{/each}
+			</div>
+		</div>
+	{/each}
 </div>
 
 <style lang="scss">
@@ -141,16 +177,44 @@
 
 	.list-item {
 		display: flex;
-		justify-content: space-between;
-		align-items: center;
+		flex-direction: row;
 		padding: 1rem;
 		background-color: #f9f9f9;
 		border-radius: 8px;
+		justify-content: space-between;
+
+		.first,
+		.second {
+			display: flex;
+			align-items: center;
+
+			* {
+				flex: 1;
+			}
+		}
+
+		.second {
+			justify-self: flex-end;
+			gap: 2.5rem;
+		}
 	}
 
 	.quantity {
 		display: flex;
 		align-items: center;
 		gap: 1rem;
+	}
+
+	.receipt {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.receipt-row {
+		display: flex;
+		* {
+			flex: 1;
+			text-align: end;
+		}
 	}
 </style>

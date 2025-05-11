@@ -81,6 +81,9 @@
 		padding-left: 5rem;
 		flex-wrap: wrap;
 		background-color: rgb(221, 184, 18);
+
+		border-radius: 1rem;
+		overflow: hidden;
 	}
 
 	.cheffy {

@@ -4,6 +4,7 @@
 	import { cartItems } from '$lib/localStores';
 	import { collectionStore } from 'sveltefire';
 	import type { ShopItem } from '$lib/utils';
+	import ShopCard from '$lib/components/ShopCard.svelte';
 
 	const shopItems = collectionStore<ShopItem>(db, 'items');
 
@@ -43,62 +44,21 @@
 <main class="wrapper">
 	<div class="grid">
 		{#each $shopItems as item}
-			<div class="card">
-				<a href="/item/{item.id}">
-					<img class="product-image" src={item.image} alt={item.name} />
-				</a>
-
-				<h3>{item.name}</h3>
-				<p>{item.price}THB</p>
-				<p>{item.stock} remaining</p>
-
-				<ul>
-					{#each item.category as category}
-						<li>{category}</li>
-					{/each}
-				</ul>
-
-				<button
-					class="order-btn btn"
-					class:btn-disabled={item.stock <=
-						($cartItems.find((cartItem) => cartItem.id === item.id)?.quantity || 0)}
-					onclick={() => addItemToCart(item.id, item.price, item.name, 1, item.stock)}
-					>Add to cart</button
-				>
-			</div>
+			<ShopCard {item} />
 		{/each}
 	</div>
 </main>
 
 {#each allCategories as category}
+	<br />
+	<br />
+
 	<section class="wrapper">
 		<h2>{category}</h2>
 		<div class="grid">
 			{#each items as item}
 				{#if item.category.includes(category)}
-					<div class="card">
-						<a href="/item/{item.id}">
-							<img class="product-image" src={item.image} alt={item.name} />
-						</a>
-
-						<h3>{item.name}</h3>
-						<p>{item.price}THB</p>
-						<p>{item.stock} remaining</p>
-
-						<ul>
-							{#each item.category as category}
-								<li>{category}</li>
-							{/each}
-						</ul>
-
-						<button
-							class="order-btn btn"
-							class:btn-disabled={item.stock <=
-								($cartItems.find((cartItem) => cartItem.id === item.id)?.quantity || 0)}
-							onclick={() => addItemToCart(item.id, item.price, item.name, 1, item.stock)}
-							>Add to cart</button
-						>
-					</div>
+					<ShopCard {item} />
 				{/if}
 			{/each}
 		</div>
@@ -112,34 +72,13 @@
 		justify-content: space-between;
 		padding: 2rem;
 		flex-wrap: wrap;
-
 		background-color: rgb(221, 184, 18);
 	}
 
 	.grid {
 		margin-top: 1rem;
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		grid-template-columns: repeat(4, minmax(250px, 250px));
 		gap: 1.5rem;
-	}
-
-	.card {
-		background-color: white;
-		border-radius: 0.5rem;
-		padding: 1rem;
-		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-	}
-
-	.order-btn {
-		justify-self: flex-end;
-	}
-
-	.product-image {
-		max-width: 100%;
-		height: auto;
-
-		aspect-ratio: 1 / 1;
-		border-radius: 0.5rem;
-		object-fit: cover;
 	}
 </style>

@@ -36,7 +36,7 @@
 		{#each $shopItems as item}
 			<div class="card">
 				<a href="/item/{item.id}">
-					<img src={item.image} alt={item.name} />
+					<img class="product-image" src={item.image} alt={item.name} />
 				</a>
 
 				<h2>{item.name}</h2>
@@ -75,7 +75,7 @@
 	.grid {
 		margin-top: 1rem;
 		display: grid;
-		grid-template-columns: repeat(4, minmax(300px, 1fr));
+		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 		gap: 1.5rem;
 	}
 
@@ -88,5 +88,14 @@
 
 	.order-btn {
 		justify-self: flex-end;
+	}
+
+	.product-image {
+		max-width: 100%;
+		height: auto;
+
+		aspect-ratio: 1 / 1;
+		border-radius: 0.5rem;
+		object-fit: cover;
 	}
 </style>

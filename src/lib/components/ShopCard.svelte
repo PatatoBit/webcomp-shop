@@ -27,7 +27,9 @@
 		<h3>{item.name}</h3>
 		<div class="price-stock">
 			<p class="price">{item.price}THB</p>
-			<p class="stock">{item.stock} remaining</p>
+			<p class="stock">
+				{item.stock - ($cartItems.find((cartItem) => cartItem.id === item.id)?.quantity || 0)} remaining
+			</p>
 		</div>
 
 		<div class="categories">
@@ -36,12 +38,20 @@
 			{/each}
 		</div>
 
-		<button
-			class="order-btn btn"
-			class:btn-disabled={item.stock <= ($cartItems.find((cartItem) => cartItem.id === item.id)?.quantity || 0)}
-			onclick={() => addItemToCart(item.id, item.price, item.name, 1, item.stock)}
-			>Add to cart</button
-		>
+		<div class="button-container">
+			<button
+				class="order-btn btn"
+				class:btn-disabled={item.stock <=
+					($cartItems.find((cartItem) => cartItem.id === item.id)?.quantity || 0)}
+				onclick={() => addItemToCart(item.id, item.price, item.name, 1, item.stock)}
+				>Add to cart</button
+			>
+			{#if ($cartItems.find((cartItem) => cartItem.id === item.id)?.quantity || 0) > 0}
+				<span class="cart-count"
+					>{$cartItems.find((cartItem) => cartItem.id === item.id)?.quantity}</span
+				>
+			{/if}
+		</div>
 	</div>
 </div>
 
@@ -100,8 +110,27 @@
 		color: #666;
 	}
 
-	.order-btn {
+	.button-container {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
 		margin-top: auto;
 		width: 100%;
 	}
-</style> 
+
+	.order-btn {
+		flex: 1;
+		min-width: 0;
+	}
+
+	.cart-count {
+		background-color: #f0f0f0;
+		padding: 0.25rem 0.5rem;
+		border-radius: 1rem;
+		font-size: 0.9rem;
+		color: #666;
+		min-width: 1.5rem;
+		text-align: center;
+		flex-shrink: 0;
+	}
+</style>

@@ -5,7 +5,7 @@
 	import { collectionStore } from 'sveltefire';
 	import type { ShopItem } from '$lib/utils';
 
-	const shopItem = collectionStore<ShopItem>(db, 'items');
+	const shopItems = collectionStore<ShopItem>(db, 'items');
 
 	function addItemToCart(id: string, price: number, name: string, quantity: number, stock: number) {
 		cartItems.update((items: CartItem[]) => {
@@ -33,9 +33,11 @@
 
 <main class="wrapper">
 	<div class="grid">
-		{#each $shopItem as item}
+		{#each $shopItems as item}
 			<div class="card">
-				<img src={item.image} alt={item.name} />
+				<a href="/item/{item.id}">
+					<img src={item.image} alt={item.name} />
+				</a>
 
 				<h2>{item.name}</h2>
 				<p>{item.description}</p>

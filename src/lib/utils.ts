@@ -13,5 +13,5 @@ export interface ShopItem {
 export interface Order {
 	createdAt: string;
 	items: CartItem[];
-	status: 'pending' | 'shipped' | 'delivered' | 'cancelled';
+	status: 'paid' | 'cooking' | 'delivering' | 'delivered' | 'canceled';
 }

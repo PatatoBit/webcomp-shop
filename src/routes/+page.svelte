@@ -18,6 +18,15 @@
 			return items;
 		});
 	}
+
+	let items: ShopItem[] = [];
+	let allCategories: string[] = [];
+
+	shopItems.subscribe((data) => {
+		if (!data) return;
+		items = data;
+		allCategories = Array.from(new Set(items.flatMap((item) => item.category)));
+	});
 </script>
 
 <header class="wrapper hero">
@@ -32,6 +41,22 @@
 </header>
 
 <main class="wrapper">
+	<label class="input">
+		<svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+			<g
+				stroke-linejoin="round"
+				stroke-linecap="round"
+				stroke-width="2.5"
+				fill="none"
+				stroke="currentColor"
+			>
+				<circle cx="11" cy="11" r="8"></circle>
+				<path d="m21 21-4.3-4.3"></path>
+			</g>
+		</svg>
+		<input type="search" class="grow" placeholder="Search" />
+	</label>
+
 	<div class="grid">
 		{#each $shopItems as item}
 			<div class="card">
@@ -62,12 +87,49 @@
 	</div>
 </main>
 
+{#each allCategories as category}
+	<section class="wrapper">
+		<h2>{category}</h2>
+		<div class="grid">
+			{#each items as item}
+				{#if item.category.includes(category)}
+					<div class="card">
+						<a href="/item/{item.id}">
+							<img class="product-image" src={item.image} alt={item.name} />
+						</a>
+
+						<h2>{item.name}</h2>
+						<p>{item.description}</p>
+						<p>{item.price}THB</p>
+						<p>{item.stock} remaining</p>
+
+						<ul>
+							{#each item.category as category}
+								<li>{category}</li>
+							{/each}
+						</ul>
+
+						<button
+							class="order-btn btn"
+							class:btn-disabled={item.stock <=
+								($cartItems.find((cartItem) => cartItem.id === item.id)?.quantity || 0)}
+							onclick={() => addItemToCart(item.id, item.price, item.name, 1, item.stock)}
+							>Add to cart</button
+						>
+					</div>
+				{/if}
+			{/each}
+		</div>
+	</section>
+{/each}
+
 <style lang="scss">
 	.hero {
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
 		padding: 2rem;
+		flex-wrap: wrap;
 
 		background-color: rgb(44, 96, 217);
 	}

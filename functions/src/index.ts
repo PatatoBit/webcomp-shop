@@ -1,19 +1,26 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * import {onCall} from "firebase-functions/v2/https";
- * import {onDocumentWritten} from "firebase-functions/v2/firestore";
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
+import { onDocumentCreated } from 'firebase-functions/v2/firestore';
+import * as admin from 'firebase-admin';
 
-import {onRequest} from "firebase-functions/v2/https";
-import * as logger from "firebase-functions/logger";
+admin.initializeApp();
 
-// Start writing functions
-// https://firebase.google.com/docs/functions/typescript
+export const markStatusSequence = onDocumentCreated(
+	{ region: 'asia-southeast1', document: 'orders/{orderId}' },
+	async (event) => {
+		const snap = event.data;
+		if (!snap) return;
 
-// export const helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+		const ref = snap.ref;
+		const now = admin.firestore.Timestamp.now();
+
+		await ref.update({
+			status: 'delivering',
+			updatedAt: now
+		});
+
+		await new Promise((resolve) => setTimeout(resolve, 5000));
+		await ref.update({
+			status: 'delivered',
+			updatedAt: admin.firestore.Timestamp.now()
+		});
+	}
+);

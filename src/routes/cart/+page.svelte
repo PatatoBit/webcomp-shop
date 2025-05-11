@@ -2,7 +2,7 @@
 	import { db } from '$lib/firebase';
 	import { cartItems } from '$lib/localStores';
 	import type { Order } from '$lib/utils';
-	import { addDoc, collection, type doc } from 'firebase/firestore';
+	import { addDoc, collection, doc, updateDoc } from 'firebase/firestore';
 	import { collectionStore } from 'sveltefire';
 
 	const currentOrders = collectionStore<Order>(db, 'orders');
@@ -33,8 +33,16 @@
 
 		const docRef = await addDoc(colRef, {
 			createdAt: new Date(),
-			status: 'pending',
+			status: 'paid',
 			items: $cartItems
+		});
+
+		// Subtract from stock
+		$cartItems.forEach(async (item) => {
+			const itemRef = doc(db, 'items', item.id);
+			await updateDoc(itemRef, {
+				stock: item.stock - item.quantity
+			});
 		});
 
 		cartItems.set([]);

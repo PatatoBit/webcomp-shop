@@ -34,6 +34,12 @@
 	<div>
 		<h1>ร้านพี่เชฟ</h1>
 		<p>หมูกรอบคั่วพริกเกลือ</p>
+
+		<img
+			class="cheffy"
+			src="https://media.discordapp.net/attachments/1079020349041156167/1371025980700758046/B2q5s3ex6KSgAAAAAElFTkSuQmCC.png?ex=6821a2f2&is=68205172&hm=35dc69d49df4a624494986e6cc39a9243ba6223e675546e342b4ee081637dccc&=&format=webp&quality=lossless&width=770&height=741"
+			alt=""
+		/>
 	</div>
 
 	<a href="/cart">
@@ -68,11 +74,23 @@
 <style lang="scss">
 	.hero {
 		display: flex;
+		position: relative;
 		flex-direction: row;
 		justify-content: space-between;
 		padding: 2rem;
+		padding-left: 5rem;
 		flex-wrap: wrap;
 		background-color: rgb(221, 184, 18);
+	}
+
+	.cheffy {
+		position: absolute;
+		width: 120px;
+		height: 120px;
+
+		bottom: 0;
+		left: 0;
+		z-index: 1;
 	}
 
 	.grid {

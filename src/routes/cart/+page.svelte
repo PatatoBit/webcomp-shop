@@ -78,24 +78,24 @@
 					<div class="receipt-row">
 						<p>{item.name}</p>
 						<p>{item.quantity} x {item.price}THB</p>
-						<p>{item.quantity * item.price}THB</p>
+						<strong>{item.quantity * item.price}THB</strong>
 					</div>
 				{/each}
 			</div>
 			<div class="receipt-row">
 				<p>Delivery fee</p>
 				<p></p>
-				<p>35THB</p>
+				<strong>35THB</strong>
 			</div>
 
 			<div class="receipt-row">
 				<p>Total</p>
 				<p></p>
-				<p>
+				<strong>
 					{($cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0) + 35).toFixed(
 						2
 					)}THB
-				</p>
+				</strong>
 			</div>
 
 			<div class="modal-action">
